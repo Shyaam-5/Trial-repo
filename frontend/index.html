@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECG Classification - AI-Powered Cardiac Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>ECG Classifier</span>
+                </div>
+                <div class="header-subtitle">
+                    AI-Powered Cardiac Signal Analysis
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-card">
+                    <div class="card-header">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h2>Upload ECG Files</h2>
+                        <p>Upload your ECG data files (.dat & .hea) for AI-powered classification</p>
+                    </div>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <i class="fas fa-file-medical" id="uploadIcon"></i>
+                            <h3 id="uploadTitle">Drag & Drop ECG Files</h3>
+                            <p id="uploadSubtitle">or click to browse files</p>
+                            <small>Supported formats: .dat, .hea (Max 10MB each)</small>
+                        </div>
+                        <input type="file" id="ecgFile" accept=".dat,.hea" multiple hidden>
+                    </div>
+
+                    <div class="file-preview" id="filePreview" style="display: none;">
+                        <h4><i class="fas fa-files"></i> Selected Files</h4>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+
+                    <div class="upload-actions">
+                        <button class="btn btn-primary" id="analyzeBtn" onclick="uploadFiles()" disabled>
+                            <span class="btn-content">
+                                <i class="fas fa-brain"></i>
+                                <span>Analyze ECG</span>
+                            </span>
+                            <div class="loading-spinner" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>Processing...</span>
+                            </div>
+                        </button>
+                        <button class="btn btn-secondary" id="clearBtn" onclick="clearFiles()" style="display: none;">
+                            <i class="fas fa-trash"></i>
+                            Clear Files
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h2>Analysis Results</h2>
+                    </div>
+                    
+                    <div class="result-content" id="resultContent">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ECG Classes Info -->
+            <section class="info-section">
+                <div class="info-card">
+                    <div class="card-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h2>ECG Classification Categories</h2>
+                    </div>
+                    <div class="categories-grid">
+                        <div class="category-item">
+                            <div class="category-icon normal">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>NORM</h4>
+                                <p>Normal ECG</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>CD</h4>
+                                <p>Conduction Disturbance</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>HYP</h4>
+                                <p>Hypertrophy</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon critical">
+                                <i class="fas fa-heart-broken"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>MI</h4>
+                                <p>Myocardial Infarction</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-wave-square"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>STTC</h4>
+                                <p>ST/T Change</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-expand"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>LVH</h4>
+                                <p>Left Ventricular Hypertrophy</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>LAFB</h4>
+                                <p>Left Anterior Fascicular Block</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>ISC_</h4>
+                                <p>Ischemic</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>IRBBB</h4>
+                                <p>Incomplete Right Bundle Branch Block</p>
+                            </div>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-icon abnormal">
+                                <i class="fas fa-random"></i>
+                            </div>
+                            <div class="category-info">
+                                <h4>IVCD</h4>
+                                <p>Intraventricular Conduction Disturbance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 ECG Classifier. AI-Powered Cardiac Analysis System.</p>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <i class="notification-icon"></i>
+            <span class="notification-message"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
